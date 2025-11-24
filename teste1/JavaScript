@@ -1,0 +1,40 @@
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Mostrar loading
+    document.getElementById('loadingMessage').style.display = 'block';
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('submitBtn').disabled = true;
+    
+    // Coletar dados do formulário
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        destination: document.getElementById('destination').value,
+        departureDate: document.getElementById('departureDate').value,
+        returnDate: document.getElementById('returnDate').value,
+        travelers: document.getElementById('travelers').value,
+        budget: document.getElementById('budget').value,
+        notes: document.getElementById('notes').value
+    };
+    
+    console.log('Dados do agendamento (simulação):', formData);
+    
+    // Simular envio (substitua por FormSubmit quando estiver em servidor)
+    setTimeout(function() {
+        document.getElementById('loadingMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('submitBtn').disabled = false;
+        
+        // Rolar para a mensagem de sucesso
+        document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        
+        // Limpar formulário
+        document.getElementById('bookingForm').reset();
+        
+        // Em ambiente de produção, descomente a linha abaixo:
+        // this.submit(); // Para enviar realmente quando estiver em servidor
+    }, 2000);
+});

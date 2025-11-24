@@ -1,0 +1,53 @@
+-- Procedure para criar um novo agendamento
+DELIMITER //
+CREATE PROCEDURE sp_criar_agendamento(
+    IN p_nome_cliente VARCHAR(100),
+    IN p_email_cliente VARCHAR(100),
+    IN p_telefone_cliente VARCHAR(20),
+    IN p_destino_id INT,
+    IN p_data_partida DATE,
+    IN p_data_retorno DATE,
+    IN p_numero_viajantes INT,
+    IN p_orcamento DECIMAL(10,2),
+    IN p_observacoes TEXT
+)
+BEGIN
+    DECLARE v_cliente_id INT;
+    
+    -- Verificar se o cliente já existe
+    SELECT id INTO v_cliente_id FROM clientes WHERE email = p_email_cliente;
+    
+    -- Se não existir, criar novo cliente
+    IF v_cliente_id IS NULL THEN
+        INSERT INTO clientes (nome_completo, email, telefone) 
+        VALUES (p_nome_cliente, p_email_cliente, p_telefone_cliente);
+        SET v_cliente_id = LAST_INSERT_ID();
+    END IF;
+    
+    -- Criar agendamento
+    INSERT INTO agendamentos (cliente_id, destino_id, data_partida, data_retorno, numero_viajantes, orcamento, observacoes)
+    VALUES (v_cliente_id, p_destino_id, p_data_partida, p_data_retorno, p_numero_viajantes, p_orcamento, p_observacoes);
+    
+    SELECT LAST_INSERT_ID() as agendamento_id;
+END //
+DELIMITER ;
+
+-- Procedure para relatório mensal
+DELIMITER //
+CREATE PROCEDURE sp_relatorio_mensal(IN p_mes INT, IN p_ano INT)
+BEGIN
+    SELECT 
+        d.nome as destino,
+        COUNT(a.id) as total_agendamentos,
+        SUM(a.orcamento) as valor_total,
+        AVG(a.orcamento) as valor_medio,
+        AVG(DATEDIFF(a.data_retorno, a.data_partida)) as duracao_media
+    FROM agendamentos a
+    JOIN destinos d ON a.destino_id = d.id
+    WHERE MONTH(a.created_at) = p_mes 
+        AND YEAR(a.created_at) = p_ano
+        AND a.status IN ('confirmado', 'concluido')
+    GROUP BY d.id, d.nome
+    ORDER BY valor_total DESC;
+END //
+DELIMITER ;

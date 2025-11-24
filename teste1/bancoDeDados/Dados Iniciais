@@ -1,0 +1,10 @@
+-- Inserir destinos iniciais
+INSERT INTO destinos (nome, descricao, preco_base, imagem_url) VALUES
+('Rio de Janeiro', 'Desfrute das praias paradisíacas e do Cristo Redentor na Cidade Maravilhosa.', 1200.00, 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+('Fernando de Noronha', 'Paraíso ecológico com águas cristalinas e vida marinha abundante.', 2500.00, 'https://images.unsplash.com/photo-1544984243-ec57ea16fe25?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+('Gramado', 'Encante-se com a arquitetura europeia e o clima aconchegante da Serra Gaúcha.', 1800.00, 'https://images.unsplash.com/photo-1587330979470-3595ac045ab0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+
+-- Inserir usuário administrador padrão
+INSERT INTO usuarios (nome, email, senha, tipo) VALUES
+('Administrador', 'admin@viajarmais.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+-- Senha: password (hash bcrypt)

@@ -1,0 +1,33 @@
+-- View para agendamentos com informações completas
+CREATE VIEW vw_agendamentos_completos AS
+SELECT 
+    a.id,
+    a.data_partida,
+    a.data_retorno,
+    a.numero_viajantes,
+    a.orcamento,
+    a.observacoes,
+    a.status,
+    a.created_at,
+    c.nome_completo AS cliente_nome,
+    c.email AS cliente_email,
+    c.telefone AS cliente_telefone,
+    d.nome AS destino_nome,
+    d.preco_base AS destino_preco_base
+FROM agendamentos a
+JOIN clientes c ON a.cliente_id = c.id
+JOIN destinos d ON a.destino_id = d.id;
+
+-- View para relatório de destinos mais populares
+CREATE VIEW vw_destinos_populares AS
+SELECT 
+    d.id,
+    d.nome,
+    COUNT(a.id) as total_agendamentos,
+    AVG(DATEDIFF(a.data_retorno, a.data_partida)) as duracao_media,
+    AVG(a.orcamento) as orcamento_medio
+FROM destinos d
+LEFT JOIN agendamentos a ON d.id = a.destino_id
+WHERE a.status IN ('confirmado', 'concluido')
+GROUP BY d.id, d.nome
+ORDER BY total_agendamentos DESC;
